@@ -23,6 +23,6 @@ Why this dataset:
 After adding the CSVs, run:
 
 ```powershell
-& "C:\Users\dhruv\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" python\clean_data.py
-& "C:\Users\dhruv\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" python\analysis.py
+python python/clean_data.py
+python python/analysis.py
 ```

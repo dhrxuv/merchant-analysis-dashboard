@@ -1,25 +1,58 @@
 # Merchant Analytics Dashboard: SQL, Excel & Python Business Intelligence
 
-An end-to-end analytics project using SQL, Python, Excel, and Power BI concepts to analyze marketplace transaction data, generate business KPIs, and uncover revenue, retention, and operational insights.
+An end-to-end analytics project built on the **Brazilian E-Commerce Public Dataset by Olist** to analyze revenue, payments, merchant performance, customer retention, and delivery operations.
+
+## Screenshots
+
+![Dashboard Overview](images/dashboard-overview.png)
+
+![KPI Cards](images/kpi-cards.png)
+
+![Revenue Trend](images/revenue-trend.png)
+
+![Payment Mix](images/payment-mix.png)
+
+![Merchant Ranking](images/merchant-ranking.png)
+
+## Key Insights
+
+- Top 5% of merchants generated **52.51%** of total revenue.
+- Credit cards accounted for **78.34%** of payment value.
+- Weekday average order value was **1.33%** higher than weekends.
+- Late deliveries affected **8.11%** of delivered orders, and late orders arrived **9.55 days** behind estimate on average.
+- Sao Paulo contributed **37.47%** of total revenue.
+- The merchant risk logic flagged **223** above-average-revenue merchants for intervention.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    A["Raw CSV Files"] --> B["Cleaning & Feature Engineering<br/>Python + Pandas"]
+    B --> C["SQLite Analytical Model"]
+    C --> D["SQL Business Queries"]
+    D --> E["CSV Exports"]
+    E --> F["Excel Dashboard"]
+    E --> G["Power BI Dashboard"]
+    F --> H["Business Decisions"]
+    G --> H
+```
 
 ## Why This Project
 
-This project is built as a business-facing analytics case study on the **Brazilian E-Commerce Public Dataset by Olist**, which includes customers, merchants, products, payments, reviews, and delivery timelines.
-
-That makes it a strong fit for answering questions like:
+This project is structured like a business analytics workflow rather than a notebook-only exercise. It focuses on questions such as:
 
 - Which merchants drive the most revenue?
-- What does monthly order and revenue growth look like?
-- How concentrated is revenue across top sellers?
-- Which payment methods dominate merchant sales?
-- How strong is customer retention?
-- Where are operational issues like delays and cancellations hurting the business?
+- How concentrated is marketplace revenue?
+- Which payment methods dominate transaction value?
+- Where are delivery delays and cancellations creating risk?
+- Which merchants are healthy versus high value but operationally fragile?
 
 ## Tech Stack
 
 - Python
-- SQL (SQLite-ready, PostgreSQL-portable logic)
 - Pandas
+- SQL
+- SQLite
 - Excel
 - Power BI
 - Git
@@ -40,9 +73,9 @@ Tables used:
 - geolocation
 - product category translation
 
-Place the raw CSV files in [data/raw](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/data/raw) using the instructions in [data/README.md](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/data/README.md).
+Setup instructions: [data/README.md](data/README.md)
 
-## Folder Structure
+## Project Structure
 
 ```text
 merchant-analytics-dashboard/
@@ -53,6 +86,7 @@ merchant-analytics-dashboard/
 │   └── README.md
 ├── database/
 ├── excel/
+├── images/
 ├── powerbi/
 ├── python/
 ├── sql/
@@ -61,66 +95,51 @@ merchant-analytics-dashboard/
 └── requirements.txt
 ```
 
-## End-to-End Workflow
+## Workflow
 
-1. Download the Olist dataset and copy the CSV files into `data/raw/`.
-2. Run [python/clean_data.py](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/python/clean_data.py) to clean raw data, engineer delivery and date features, and build a SQLite database.
-3. Run [python/analysis.py](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/python/analysis.py) to generate KPI and chart-ready exports.
-4. Build the Excel dashboard manually from the cleaned exports in `data/exports/`.
-5. Optionally build a Power BI dashboard using the same exports.
+1. Put the raw Olist CSV files in `data/raw/`.
+2. Run [python/clean_data.py](python/clean_data.py) to clean the data, engineer features, and build the SQLite database.
+3. Run [python/analysis.py](python/analysis.py) to generate chart-ready and dashboard-ready CSV exports.
+4. Build the Excel dashboard manually from `data/exports/`.
+5. Optionally connect the same exports to Power BI.
 
-Bundled runtime command:
+Run commands:
 
 ```powershell
-& "C:\Users\dhruv\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" python\clean_data.py
-& "C:\Users\dhruv\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" python\analysis.py
+python python/clean_data.py
+python python/analysis.py
 ```
 
-## SQL Analysis
+## SQL Layer
 
-The SQL layer is intentionally business-oriented rather than purely technical. See:
+Core files:
 
-- [sql/schema.sql](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/sql/schema.sql)
-- [sql/analysis.sql](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/sql/analysis.sql)
+- [sql/schema.sql](sql/schema.sql)
+- [sql/analysis.sql](sql/analysis.sql)
 
-Business questions covered:
+The SQL analysis covers:
 
-- Total revenue
-- Delivered orders
-- Monthly revenue trend
-- Monthly order trend
-- Average order value
-- Top 10 merchants by revenue
-- Revenue concentration among top 5% merchants
-- Cancellation rate
-- Revenue lost due to cancellations
-- Payment method distribution
-- Weekend vs weekday revenue
-- Revenue by customer state
-- Top cities by orders
-- Average basket size
-- Most popular product categories
-- Average review score by merchant
-- Late delivery rate
-- Average delivery delay by merchant state
-- Customer lifetime value
-- Cohort retention
-- Merchant health score and segmentation
-- High-value merchants needing intervention
+- revenue and order trends
+- payment method distribution
+- merchant ranking and revenue concentration
+- customer lifetime value and cohort retention
+- review quality and delivery performance
+- merchant health scoring
+- intervention candidate identification
 
-## Python Analysis
+## Python Layer
 
-[python/clean_data.py](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/python/clean_data.py) handles:
+[python/clean_data.py](python/clean_data.py) handles:
 
 - missing-value-safe parsing
 - duplicate removal
 - datetime conversion
 - feature engineering for month, weekday, weekend, delivery days, and delay days
-- translation joins for category names
-- export of cleaned tables
-- creation of a SQLite analytical database
+- translation joins for product categories
+- cleaned CSV exports
+- SQLite database creation
 
-[python/analysis.py](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/python/analysis.py) exports:
+[python/analysis.py](python/analysis.py) exports:
 
 - KPI summary
 - monthly revenue
@@ -130,97 +149,41 @@ Business questions covered:
 - delivery summary
 - review distribution
 - category performance
-- merchant health score
+- merchant health
 - intervention candidates
-- cohort retention
-
-## Excel Dashboard
-
-The Excel dashboard is intended to be built manually from the exports in `data/exports/`.
-
-Recommended Excel tabs:
-
-- Dashboard
-- Monthly Revenue
-- Top Merchants
-- Revenue by State
-- Payment Mix
-- Merchant Health
-- At Risk Merchants
-- Retention
-
-Recommended Excel features:
-
-- Pivot Tables
-- Pivot Charts
-- Slicers
-- Timeline filters
-- Conditional formatting
-- KPI cards
-- Segment summaries
+- retention cohorts
 
 ## Merchant Health Score
 
-To make the project more decision-oriented, the analysis now includes a **Merchant Health Score** for each seller.
-
-The score blends:
+The project includes a merchant scoring layer that combines:
 
 - revenue contribution
 - review quality
 - late delivery rate
 - cancellation rate
 
-This creates four business-friendly merchant segments:
+This segments merchants into:
 
-- High Value / Healthy
-- High Value / At Risk
-- Low Value / Healthy
-- Low Value / At Risk
+- `High Value / Healthy`
+- `High Value / At Risk`
+- `Low Value / Healthy`
+- `Low Value / At Risk`
 
-This is useful because it turns raw reporting into account prioritization instead of stopping at descriptive dashboards.
+That makes the project more actionable than a static dashboard because it identifies which merchants need support, monitoring, or escalation.
+
+## Excel Dashboard
+
+The Excel deliverable is intended to be built manually from the exports in `data/exports/`.
+
+Suggested tabs and visuals are documented in [excel/README.md](excel/README.md).
 
 ## Power BI
 
-Use the exports in `data/exports/` to create:
-
-- Executive Summary
-- Merchant Performance
-- Customer Retention
-- Delivery Operations
-- Customer Experience
-
-See [powerbi/README.md](C:/Users/dhruv/Documents/merchant%20analysis%20dashboard/powerbi/README.md).
-
-## Current Dataset-Backed Highlights
-
-Based on the loaded Olist dataset in this repo:
-
-- total revenue is `R$ 16.01M` across `99,441` orders
-- average order value is `R$ 160.99`
-- repeat customer rate is `3.12%`
-- late delivery rate is `8.11%`
-- average review score is `4.09`
-
-Business interpretation:
-
-- payment mix and monthly revenue trends can be used to discuss monetization and checkout behavior
-- low repeat rate suggests retention upside, especially through CRM or loyalty plays
-- late-delivery pockets can be tied to merchant operations and customer experience
-- Merchant Health Score highlights which high-value sellers deserve proactive support
-
-## Recommendations
-
-- Prioritize account management for `High Value / At Risk` merchants before operational issues hurt revenue.
-- Use retention campaigns and CRM nudges to improve the relatively low repeat customer rate.
-- Track late-delivery-heavy merchants or regions with an exception dashboard and weekly escalation list.
-- Combine reviews, cancellations, and delays into a merchant success workflow rather than viewing each metric in isolation.
+Suggested Power BI pages are documented in [powerbi/README.md](powerbi/README.md).
 
 ## Deliverables
 
 - cleaned CSVs in `data/processed/`
 - SQLite database in `database/merchant_analytics.db`
 - chart-ready exports in `data/exports/`
-
-## Notes
-
-The repository focuses on the analytical pipeline and source files. Local outputs such as databases, dashboard screenshots, and workbook versions can be created from the processed data and exports as needed.
+- dashboard screenshots in `images/`
