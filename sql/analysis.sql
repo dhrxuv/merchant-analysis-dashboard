@@ -1,5 +1,5 @@
 -- Merchant Analytics Dashboard
--- 20 recruiter-friendly business intelligence queries for the Olist analytical model.
+-- Business intelligence queries for the Olist analytical model.
 
 -- 1. Total revenue
 SELECT ROUND(SUM(payment_value), 2) AS total_revenue

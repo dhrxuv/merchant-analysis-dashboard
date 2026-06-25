@@ -17,5 +17,4 @@ data/exports/*
 database/*
 !database/.gitkeep
 
-excel/*.xlsx
 powerbi/*.pbix
